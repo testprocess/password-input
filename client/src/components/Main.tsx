@@ -1,12 +1,53 @@
 import React, { useState, useEffect } from "react";
-import { Button, Box, Grid, Stack } from '@mui/material';
+import { Button, Box, Grid, Stack, TextField } from '@mui/material';
 import Cookies from 'js-cookie'
 
 import Navbar from './Navbar'
+import CircleIcon from '@mui/icons-material/Circle';
 
 function Main() {
     const [isFilled, setFilled] = useState([true,false,false,false,false,false])
+    const [text, setText] = useState('')
 
+    const handleKeydown = (e) => {
+        const key = e.key
+        console.log(e)
+        if (e.code == 'Backspace') {
+            setText((state) => state.slice(0, -1))
+            return 0
+        }
+
+        if (e.code.slice(0, 3) != 'Key') {
+            return 0
+        }
+        setText((state) => state + key)
+    }
+
+    const fillInput = () => {
+        let bool = [false,false,false,false,false,false]
+        for (let index = 0; index < bool.length; index++) {
+            if (index >= text.length) {
+                break
+            }
+            bool[index] = true
+        }
+
+        setFilled(bool)
+    }
+
+
+    useEffect(() => {
+        fillInput()
+    }, [text])
+
+    useEffect(() => {
+        const keydown = () => {
+            window.addEventListener("keydown", handleKeydown);
+        }
+
+        keydown()
+        
+    }, [])
 
     return (
         <Grid
@@ -19,19 +60,17 @@ function Main() {
   
           <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
   
-            <h1>단순 게시판이 아닌데요</h1>
-  
             <Stack spacing={2}>
-            <Grid container spacing={2}>
-                <Grid item xs={2} >
-                    <InputPassword isFilled={isFilled[0]}></InputPassword>
+                <Grid container spacing={2}>
+                    {isFilled.map(element => (
+                    <Grid item xs={2} >
+                        <InputPassword isFilled={element}></InputPassword>
+                    </Grid>
+                    ))}
+
                 </Grid>
-                <Grid item xs={2} >
-                    <InputPassword isFilled={isFilled[1]}></InputPassword>
-                </Grid>
-            </Grid>
-                  
-              <Button variant="text"  disableElevation>이메일로 로그인 </Button>
+
+
             </Stack>
   
   
@@ -47,19 +86,27 @@ function Main() {
 function InputPassword({ isFilled }) {
 
 
-
     return (
         <div style={{
             backgroundColor: "#16181c",
             color: '#ffffff',
             cursor: 'none',
             caretColor: 'transparent',
-            fontSize: "4rem",
             border: 'none',
             outline: 'none',
             width: '2rem',
-            height: '3rem'
-        }}></div>
+            height: '3rem',
+            
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex'
+        }}>
+            {isFilled ? (
+                <CircleIcon sx={{textAlign: 'center', fontSize: '1rem'}}></CircleIcon>
+            ) : (
+                <></>
+            )}
+        </div>
     )
 }
 
