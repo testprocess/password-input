@@ -17,6 +17,11 @@ function Main() {
             return 0
         }
 
+        if (e.code == 'Enter') {
+            setText((state) => '')
+            return 0
+        }
+
         if (e.code.slice(0, 3) != 'Key') {
             return 0
         }
@@ -35,6 +40,10 @@ function Main() {
         setFilled(bool)
     }
 
+    const handleClickScreen = () => {
+        document.documentElement.requestFullscreen()
+    }
+
 
     useEffect(() => {
         fillInput()
@@ -43,6 +52,8 @@ function Main() {
     useEffect(() => {
         const keydown = () => {
             window.addEventListener("keydown", handleKeydown);
+            window.addEventListener("click", handleClickScreen);
+
         }
 
         keydown()
