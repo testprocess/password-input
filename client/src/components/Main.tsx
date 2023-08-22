@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Box, Grid, Stack, TextField } from '@mui/material';
 import Cookies from 'js-cookie'
 
@@ -7,6 +7,10 @@ import CircleIcon from '@mui/icons-material/Circle';
 
 function Main() {
     const [isFilled, setFilled] = useState([true,false,false,false,false,false])
+    const [isWrong, setWrongText] = useState(false)
+    const [isCorrect, setCorrectText] = useState(false)
+
+    
     const [text, setText] = useState('')
 
     const handleKeydown = (e) => {
@@ -40,6 +44,39 @@ function Main() {
         setFilled(bool)
     }
 
+    const checkPassword = () => {
+        if (text.length == 6 && text != 'aaaaaa') {
+            setWrongText(true)
+
+            setTimeout(() => {
+                setWrongText(false)
+                setText((state) => '')
+            }, 500)
+
+            return 0
+        }
+
+        if (text.length >= 7) {
+            setTimeout(() => {
+                setWrongText(false)
+                setText((state) => '')
+            }, 500)
+            return 0
+        }
+
+        if (text == 'aaaaaa') {
+            setCorrectText(true)
+
+            setTimeout(() => {
+                setCorrectText(false)
+
+                setText((state) => '')
+            }, 500)
+        }
+
+
+    }
+
     const handleClickScreen = () => {
         document.documentElement.requestFullscreen()
     }
@@ -47,6 +84,7 @@ function Main() {
 
     useEffect(() => {
         fillInput()
+        checkPassword()
     }, [text])
 
     useEffect(() => {
@@ -75,7 +113,7 @@ function Main() {
                 <Grid container spacing={2}>
                     {isFilled.map(element => (
                     <Grid item xs={2} >
-                        <InputPassword isFilled={element}></InputPassword>
+                        <InputPassword isCorrect={isCorrect} isWrong={isWrong} isFilled={element}></InputPassword>
                     </Grid>
                     ))}
 
@@ -94,8 +132,36 @@ function Main() {
 }
 
 
-function InputPassword({ isFilled }) {
+function InputPassword({ isFilled, isWrong, isCorrect }) {
 
+    const [iconStyle, setIconStyle] = useState({})
+
+    useEffect(() => {
+        if (isWrong == false) {
+            setIconStyle({})
+        } else {
+            setIconStyle({ 
+                color: "#ded7d7",
+                animationName: 'struggle',
+                animationDuration: '0.5s',
+                animationIterationCount: 1
+            })
+        }
+
+
+    }, [isWrong])
+
+    useEffect(() => {
+        if (isCorrect) {
+            setIconStyle({ 
+                color: "#1aeb7f"
+            })
+        } else {
+            setIconStyle({ 
+
+            })
+        }
+    }, [isCorrect])
 
     return (
         <div style={{
@@ -113,7 +179,7 @@ function InputPassword({ isFilled }) {
             display: 'flex'
         }}>
             {isFilled ? (
-                <CircleIcon sx={{textAlign: 'center', fontSize: '1rem'}}></CircleIcon>
+                <CircleIcon sx={{textAlign: 'center', fontSize: '1rem', position: "relative", ...iconStyle }}></CircleIcon>
             ) : (
                 <></>
             )}
