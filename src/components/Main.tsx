@@ -1,11 +1,34 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button, Box, Grid, Stack, TextField } from '@mui/material';
-import Cookies from 'js-cookie'
 
-import Navbar from './Navbar'
 import CircleIcon from '@mui/icons-material/Circle';
 
 function Main() {
+
+    return (
+        <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ minHeight: '100vh' }}>
+  
+          <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
+  
+            <Stack spacing={2}>
+
+                <InputPasswordForm></InputPasswordForm>
+
+            </Stack>
+  
+          </Box>
+        </Grid>
+    );
+}
+
+
+function InputPasswordForm() {
     const [isFilled, setFilled] = useState([true,false,false,false,false,false])
     const [isWrong, setWrongText] = useState(false)
     const [isCorrect, setCorrectText] = useState(false)
@@ -15,7 +38,6 @@ function Main() {
 
     const handleKeydown = (e) => {
         const key = e.key
-        console.log(e)
         if (e.code == 'Backspace') {
             setText((state) => state.slice(0, -1))
             return 0
@@ -98,37 +120,17 @@ function Main() {
         
     }, [])
 
+
     return (
-        <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        sx={{ minHeight: '100vh' }}>
-  
-          <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
-  
-            <Stack spacing={2}>
-                <Grid container spacing={2}>
-                    {isFilled.map(element => (
-                    <Grid item xs={2} >
-                        <InputPassword isCorrect={isCorrect} isWrong={isWrong} isFilled={element}></InputPassword>
-                    </Grid>
-                    ))}
+        <Grid container spacing={2}>
+            {isFilled.map(element => (
+            <Grid item xs={2} >
+                <InputPassword isCorrect={isCorrect} isWrong={isWrong} isFilled={element}></InputPassword>
+            </Grid>
+            ))}
 
-                </Grid>
-
-
-            </Stack>
-  
-  
-  
-          </Box>
         </Grid>
-
-
-    );
+    )
 }
 
 
